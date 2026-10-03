@@ -35,9 +35,9 @@ Disclaimer: This environment is for AetherVault feature demonstration purposes o
 
 ### Prerequisites
 
-- Node.js and npm installed.
+- Node.js and pnpm installed.
 - Cloudflare account.
-- Wrangler CLI installed (`npm install -g wrangler`).
+- Wrangler is installed locally with the project dependencies.
 
 ### Installation Steps
 
@@ -59,13 +59,13 @@ Disclaimer: This environment is for AetherVault feature demonstration purposes o
    Create the KV namespace for authentication:
 
    ```bash
-   npx wrangler kv namespace create aethervault-access
+   pnpm exec wrangler kv namespace create aethervault-access
    ```
 
    Create the D1 database for data storage:
 
    ```bash
-   npx wrangler d1 create aethervault-service
+   pnpm exec wrangler d1 create aethervault-service
    ```
 
    > ⚠️ **Important**: Update your `wrangler.toml` file with the `id` (for KV) and `database_id` (for D1) returned by the commands above.
@@ -75,7 +75,7 @@ Disclaimer: This environment is for AetherVault feature demonstration purposes o
    Set the administrator password used for the frontend management interface:
 
    ```bash
-   npx wrangler secret put ADMIN_PASSWORD
+   pnpm exec wrangler secret put ADMIN_PASSWORD
    ```
 
    > ⚠️ **Security Note**: If `ADMIN_PASSWORD` is not set, all admin authorization attempts will be blocked for security.
@@ -87,14 +87,14 @@ Disclaimer: This environment is for AetherVault feature demonstration purposes o
    Initialize the D1 database schema using the provided SQL file:
 
    ```bash
-   npx wrangler d1 execute aethervault-service --remote --file=./init.sql
+   pnpm exec wrangler d1 execute aethervault-service --remote --file=./init.sql
    ```
 6. **Deploy**
 
    Deploy the worker to Cloudflare:
 
    ```bash
-   npx wrangler deploy
+   pnpm exec wrangler deploy
    ```
 
 </details>

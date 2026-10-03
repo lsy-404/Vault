@@ -12,5 +12,6 @@
   "type": "commonjs",
   "devDependencies": {
     "wrangler": "^4.56.0"
-  }
+  },
+  "packageManager": "pnpm@10.34.6"
 }

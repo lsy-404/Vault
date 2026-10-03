@@ -46,16 +46,16 @@ This document describes the migration from a Worker-only architecture to a hybri
 ### Development
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start local development server
-npx wrangler dev
+pnpm exec wrangler dev
 ```
 
 ### Deployment
 ```bash
 # Deploy to Cloudflare Workers
-npx wrangler deploy
+pnpm exec wrangler deploy
 ```
 
 ### Configuration
