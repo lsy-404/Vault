@@ -7,7 +7,9 @@
   <title>AetherVault</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
+  <link rel="stylesheet" href="/vendor/platform-kit-toast/toast.css">
   <link rel="stylesheet" href="/js/common.css">
+  <script src="/vendor/platform-kit-toast/toast.browser.js"></script>
   <script src="/js/api.js"></script>
 </head>
 <body>
@@ -17,22 +19,13 @@
     <div class="container" :class="{ 'full-height': !showNav }">
         <router-view 
             @login-success="onLoginSuccess"
-            :auth-header="authHeader" 
-            :show-toast="showToast">
+            :auth-header="authHeader">
         </router-view>
     </div>
 
     <footer class="app-footer" v-if="showNav">
         <div>Powered by <a href="https://github.com/wuyilingwei/Vault" target="_blank" style="color: inherit; text-decoration: underline;">AetherVault</a></div>
     </footer>
-
-    <!-- Toasts -->
-    <div class="toast-container">
-        <div v-for="msg in toasts" :key="msg.id" class="toast" 
-             :style="{background: msg.type === 'error' ? 'var(--danger)' : 'var(--success)'}">
-            {{ msg.text }}
-        </div>
-    </div>
   </div>
 
   <script src="/js/components/navbar.js"></script>

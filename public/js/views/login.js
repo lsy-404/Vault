@@ -1,6 +1,7 @@
 // login.js - Login view component
 (function() {
     const { ref, onMounted } = Vue;
+    const { toast } = PlatformKitToast;
 
     const LoginView = {
     template: `
@@ -33,7 +34,6 @@
             </div>
         </div>
     `,
-    props: ['showToast'],
     emits: ['login-success'],
     setup(props, { emit }) {
         const username = ref('');
@@ -84,20 +84,20 @@
                 });
                 
                 if (res.status === 200) {
-                    props.showToast('Login Successful');
+                    toast.success('Login Successful');
                     emit('login-success', auth);
                     router.push('/tokens');
                 } else {
                     try {
                         const err = await res.json();
-                        if (err.code) props.showToast('Login Failed: ' + err.code, 'error');
-                        else props.showToast('Login Failed', 'error');
+                        if (err.code) toast.error('Login Failed: ' + err.code);
+                        else toast.error('Login Failed');
                     } catch {
-                        props.showToast('Login Failed', 'error');
+                        toast.error('Login Failed');
                     }
                 }
             } catch(e) {
-                props.showToast('Network Error', 'error');
+                toast.error('Network Error');
             } finally {
                 loading.value = false;
             }
