@@ -6,7 +6,6 @@
         components: { NavBar: window.NavBar },
         setup() {
             const authHeader = ref(localStorage.getItem('v_auth') || '');
-            const toasts = ref([]);
             const showDatabase = ref(true);
 
             const authenticated = computed(() => !!authHeader.value);
@@ -33,12 +32,6 @@
                 }
             };
 
-            const showToast = (text, type = 'success') => {
-                const id = Date.now();
-                toasts.value.push({id, text, type});
-                setTimeout(() => toasts.value = toasts.value.filter(t => t.id !== id), 3000);
-            };
-
             const onLoginSuccess = (header) => {
                 authHeader.value = header;
                 localStorage.setItem('v_auth', header);
@@ -56,11 +49,17 @@
             });
 
             return { 
-                authHeader, authenticated, showNav, toasts, showToast, showDatabase,
+                authHeader, authenticated, showNav, showDatabase,
                 onLoginSuccess, onLogout
             };
         }
     });
+
+    // Toasts: the host follows the data-theme attribute toggled by the navbar and login view
+    const toastTheme = () => document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const toastHost = PlatformKitToast.mountToastHost({ theme: toastTheme() });
+    new MutationObserver(() => toastHost.setTheme(toastTheme()))
+        .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
     app.use(window.router);
     app.mount('#app');

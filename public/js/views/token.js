@@ -1,6 +1,7 @@
 // token.js - Token management view component
 (function() {
     const { ref, computed, onMounted } = Vue;
+    const { toast } = PlatformKitToast;
 
     const TokenView = {
     template: `
@@ -95,7 +96,7 @@
             </div>
         </div>
     `,
-    props: ['authHeader', 'showToast'],
+    props: ['authHeader'],
     setup(props) {
         const tokens = ref([]);
         const selected = ref(null);
@@ -109,10 +110,10 @@
                 if (res.status === 200) {
                     tokens.value = await res.json();
                 } else {
-                    props.showToast('Session expired', 'error');
+                    toast.error('Session expired');
                 }
             } catch(e) {
-                props.showToast('Network Error', 'error');
+                toast.error('Network Error');
             }
         };
 
@@ -170,11 +171,11 @@
                             tokens.value[idx] = { ...tokens.value[idx], ...payload };
                         }
                     }
-                    props.showToast('Saved successfully');
+                    toast.success('Saved successfully');
                 } else {
-                    props.showToast('Error saving', 'error');
+                    toast.error('Error saving');
                 }
-            } catch(e) { props.showToast(e.message, 'error'); }
+            } catch(e) { toast.error(e.message); }
         };
 
         const deleteToken = async () => {
@@ -187,9 +188,9 @@
                 if(res.ok) {
                     await fetchTokens();
                     selectNew();
-                    props.showToast('Token revoked');
+                    toast.success('Token revoked');
                 }
-            } catch(e) { props.showToast(e.message, 'error'); }
+            } catch(e) { toast.error(e.message); }
         };
 
         const rotateToken = async () => {
@@ -208,19 +209,19 @@
                 }
                 
                 selectToken(newToken);
-                props.showToast('Token rotated');
-            } catch (e) { props.showToast('Rotation failed', 'error'); }
+                toast.success('Token rotated');
+            } catch (e) { toast.error('Rotation failed'); }
         };
 
         const copyToClipboard = async (text) => {
             try {
                 // Note: Clipboard API requires HTTPS or localhost
                 await navigator.clipboard.writeText(text);
-                props.showToast('Copied to clipboard');
+                toast.success('Copied to clipboard');
             } catch (error) {
                 // Fallback for older browsers, permission issues, or non-HTTPS
                 console.error('Failed to copy:', error);
-                props.showToast('Failed to copy to clipboard', 'error');
+                toast.error('Failed to copy to clipboard');
             }
         };
 
@@ -232,19 +233,19 @@
             try {
                 const text = await navigator.clipboard.readText();
                 if (!text || !text.trim()) {
-                    props.showToast('Clipboard is empty', 'error');
+                    toast.error('Clipboard is empty');
                     return;
                 }
                 const perms = JSON.parse(text);
                 selected.value.permsArray = Object.entries(perms).map(([path, access]) => ({path, access}));
-                props.showToast('Permissions pasted');
+                toast.success('Permissions pasted');
             } catch (error) {
                 if (error instanceof SyntaxError) {
-                    props.showToast('Invalid JSON format', 'error');
+                    toast.error('Invalid JSON format');
                 } else if (error.name === 'NotAllowedError') {
-                    props.showToast('Clipboard permission denied', 'error');
+                    toast.error('Clipboard permission denied');
                 } else {
-                    props.showToast('Failed to paste from clipboard', 'error');
+                    toast.error('Failed to paste from clipboard');
                 }
             }
         };

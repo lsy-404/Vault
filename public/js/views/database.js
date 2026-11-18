@@ -1,5 +1,7 @@
 // database.js - Database management view component
 (function() {
+    const { toast } = PlatformKitToast;
+
     const DatabaseView = {
         template: `
     <div class="database-container">
@@ -288,8 +290,7 @@
         </div>
     </div>
 `,
-        props: ['showToast'],
-        setup(props) {
+        setup() {
             const { ref, computed, onMounted, nextTick, watch } = Vue;
             const items = ref([]);
             const originalItems = ref([]);
@@ -544,7 +545,7 @@
                         _originalKey: item.key
                     }));
                 } catch (error) {
-                    props.showToast('Failed to load database: ' + error.message, 'error');
+                    toast.error('Failed to load database: ' + error.message);
                 } finally {
                     loading.value = false;
                 }
@@ -800,10 +801,10 @@
                         throw new Error('Failed to save changes');
                     }
                     
-                    props.showToast('Changes saved successfully');
+                    toast.success('Changes saved successfully');
                     await loadData(); // Reload data
                 } catch (error) {
-                    props.showToast('Failed to save changes: ' + error.message, 'error');
+                    toast.error('Failed to save changes: ' + error.message);
                 } finally {
                     loading.value = false;
                 }
